@@ -1,0 +1,33 @@
+{
+  "name": "real-time-web-1819",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/cmda-minor-web/real-time-web-1819.git",
+  "author": "Tim <timruiterkamp@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.2",
+    "gulp": "^4.0.0",
+    "gulp-clean": "^0.4.0",
+    "gulp-concat": "2.5.2",
+    "gulp-uglify": "^3.0.2",
+    "node-sass": "^4.11.0",
+    "nodemon": "^1.18.11",
+    "socket.io": "^2.2.0",
+    "xo": "^0.24.0"
+  },
+  "xo": {
+    "space": true,
+    "semicolon": false,
+    "prettier": true
+  },
+  "scripts": {
+    "start": "nodemon src/server.js && xo",
+    "sass": "node-sass --include-path scss src/sass/index.scss dist/min-main.css",
+    "minify-scss": "node-sass --include-path scss src/sass/index.scss dist/min-main.css --output-style compressed",
+    "sass-watch": "nodemon -e scss -x npm run sass",
+    "minify": "gulp minifyJS"
+  }
+}
