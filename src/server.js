@@ -23,6 +23,7 @@ app
   });
 
 const players = {};
+const balls = {};
 io.on("connection", sockets => init.initSockets(io, players, sockets));
 
 setInterval(function() {

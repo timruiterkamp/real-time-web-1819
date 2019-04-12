@@ -53,3 +53,7 @@ form input[type="submit"] {
 
 #messages li:nth-child(odd) {
   background: #eee; }
+
+h1 {
+  text-align: center;
+  padding-top: 1em; }

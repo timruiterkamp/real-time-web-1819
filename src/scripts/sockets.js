@@ -2,10 +2,11 @@ const handler = require("./handlers");
 
 module.exports = {
   initSockets(io, players, socket) {
-    socket.on("new player", ({ name, id }) => {
+    socket.on("new player", ({ name, id, color }) => {
       players[socket.id] = {
         playerName: name,
         playerId: id,
+        playerColor: color,
         x: 300,
         y: 300
       };

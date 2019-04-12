@@ -8,7 +8,11 @@ const signUpColor = document.querySelector("#color");
 signUpForm.addEventListener("submit", e => {
   e.preventDefault();
   const value = signUpName.value;
-  socket.emit("new player", { name: value, id: generateUUID() });
+  socket.emit("new player", {
+    name: value,
+    id: generateUUID(),
+    color: signUpColor.value
+  });
   socket.on("new player", () => (signUpSection.style.display = "none"));
 });
 
@@ -60,6 +64,12 @@ document.addEventListener("keyup", function(event) {
   }
 });
 
+document.addEventListener("mouseDown", () => {
+  socket.on("ballFired", (ball, players) => {
+    console.log(players, ball);
+  });
+});
+
 setInterval(function() {
   socket.emit("movement", movement, getBounding().width, getBounding().height);
 }, 1000 / 60);
@@ -88,6 +98,7 @@ socket.on("collision", players => {
         current_value.x === previous_value.x &&
         current_value.y === previous_value.y
       ) {
+        console.log(current_value, previous_value);
         console.log("you won!");
       }
     }
@@ -97,9 +108,10 @@ socket.on("collision", players => {
 
 socket.on("state", players => {
   context.clearRect(0, 0, 800, 600);
-  context.fillStyle = signUpColor.value;
+
   for (let id in players) {
     const player = players[id];
+    context.fillStyle = player.playerColor;
     context.beginPath();
     context.arc(player.x, player.y, 20, 0, 2 * Math.PI);
     context.fill();
