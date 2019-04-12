@@ -98,8 +98,8 @@ socket.on("collision", players => {
         current_value.x === previous_value.x &&
         current_value.y === previous_value.y
       ) {
-        console.log(current_value, previous_value);
-        console.log("you won!");
+        // console.log(current_value, previous_value);
+        alert("you won!");
       }
     }
     previous_value = current_value;
