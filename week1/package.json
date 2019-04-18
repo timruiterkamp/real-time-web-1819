@@ -15,9 +15,7 @@
     "gulp-uglify": "^3.0.2",
     "node-sass": "^4.11.0",
     "nodemon": "^1.18.11",
-    "puppeteer": "^1.14.0",
     "socket.io": "^2.2.0",
-    "twit": "^2.2.11",
     "xo": "^0.24.0"
   },
   "xo": {
@@ -28,7 +26,6 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "crawl": "node src/scripts/crawler.js",
     "sass": "node-sass --include-path scss src/sass/index.scss dist/min-main.css",
     "minify-scss": "node-sass --include-path scss src/sass/index.scss dist/min-main.css --output-style compressed",
     "sass-watch": "nodemon -e scss -x npm run sass",
