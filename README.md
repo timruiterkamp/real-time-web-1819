@@ -208,6 +208,7 @@ The api that I use is the twitter api, this is a really big real-time api which 
       
     }
   ]
+  ```
 
   And their tweets on certain topics, which will be a filtered stream of tweets.
 
@@ -240,6 +241,7 @@ The api that I use is the twitter api, this is a really big real-time api which 
         "subtitle": "Mueller report unable to clear Trump of obstruction of justice"
     }
   ]
+```
 
   I Currently gather news from these sites:
   - The Guardian
