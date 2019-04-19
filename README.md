@@ -179,7 +179,7 @@ The api that I use is the twitter api, this is a really big real-time api which 
   </details>
 
   #### The limits
-  The limits are per 15 minutes for the twitter api.
+  The limits are per 15 minutes for the twitter api.  
   |             Request             |         Limit per 15 min          |
   | :-----------------------------: | :-------------------------------: |
   |           GET Trends            |                 75                |
