@@ -249,3 +249,11 @@ The api that I use is the twitter api, this is a really big real-time api which 
   - Irish times
   - Corriere (italian)
   - NU.nl
+
+
+  Visualisation of my data cycle:
+![data cycle](gh-images/data-cycle.jpg)
+
+  ## Feedback
+
+  I would like feedback on my data structure in combination with my concept. I think there will be an more effective way.
