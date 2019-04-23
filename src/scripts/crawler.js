@@ -1,6 +1,10 @@
 const puppeteer = require('puppeteer');
+const fs = require('fs');
+const db = require('./firebase');
+const slugify = require('slugify');
 
-(async () => {
+const gatherNewsTitles = async () => {
+  console.log('initialized news gathering')
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   const guardianTitles = await getGuardianTitles(page);
@@ -11,10 +15,26 @@ const puppeteer = require('puppeteer');
   const italianTitles = await getItalianTitles(page);
   const NUTitles = await getNUTitles(page);
 
-  console.log( [{timestamp: new Date().getTime()}, ...guardianTitles, ...SpiegelTitles, ...timesTitles, ...southAfricanTitles, ...irishTitles, ...italianTitles, ...NUTitles])
+  data = [...guardianTitles, ...SpiegelTitles, ...timesTitles, ...southAfricanTitles, ...irishTitles, ...italianTitles, ...NUTitles]
+  
+  data.map(item => db.collection("news").doc().set({
+    site: item.site ? item.site : '',
+    title: item.title ? item.title : '',
+    subtitle: item.subtitle ? item.subtitle : '',
+    permalink: item.title ? slugify(item.title) : ''
+})
+.then(function() {
+    console.log("Document successfully written!");
+})
+.catch(function(error) {
+    console.error("Error writing document: ", error);
+}));
+  // console.log( [{timestamp: new Date().getTime()}, ...guardianTitles, ...SpiegelTitles, ...timesTitles, ...southAfricanTitles, ...irishTitles, ...italianTitles, ...NUTitles])
 
   await browser.close();
-})();
+}
+
+// functions should be refactored to more generic functions to avoid duplication.
 
 async function getGuardianTitles(page) {
   await page.goto('https://www.theguardian.com/international');
@@ -118,4 +138,4 @@ async function getNUTitles(page) {
   });
 }
 
-// module.exports = {gatherNewsTitles}
+module.exports = {gatherNewsTitles}

@@ -3,24 +3,29 @@ const app = express();
 const exphbs = require("express-handlebars");
 const bodyParser = require("body-parser");
 const path = require("path");
-const fs = require("fs");
-const http = require("http").Server(app);
-const io = require("socket.io")(http);
-const init = require("./scripts/sockets");
-var Twit = require('twit')
-require('dotenv').config()
-
-var T = new Twit({
-    consumer_key: process.env.consumer_key,
-    consumer_secret: process.env.consumer_secret,
-    access_token: process.env.access_token,
-    access_token_secret: process.env.access_token_secret
-})
+const crawler = require('./scripts/crawler')
+const trends = require('./scripts/twitter')
+const schedule = require('node-schedule');
+const db = require('./scripts/firebase')
+const rule = new schedule.RecurrenceRule();
+rule.minute = 15;
+ 
+schedule.scheduleJob(rule, function(){
+    crawler.gatherNewsTitles()
+});
 
 app
-  .engine("handlebars", exphbs({ defaultLayout: "main" }))
-  .set("view engine", "handlebars")
-  .set("views", path.join(__dirname, "/views"))
+  .set("views", "src/views/")
+  .engine(
+    ".hbs",
+    exphbs({
+      defaultLayout: "main",
+      extname: ".hbs",
+      layoutsDir: "src/views/layouts",
+      partialsDir: "src/views/partials"
+    })
+  )
+  .set("view engine", ".hbs")
   .use(express.static(path.join(__dirname, "../dist")))
   .use(
     bodyParser.urlencoded({
@@ -28,30 +33,28 @@ app
     })
   )
   .use(bodyParser.json())
-  .get("/", function(req, res) {
-    res.render("overview");
-  });
+  .get('/:id', renderDetail)
+  .get("/", renderOverview)
+  .listen(process.env.PORT || 3000);
 
 
-T.get('trends/place', {id: '1'}, gotData);
+async function renderOverview(req, res, next) {
+  // let titles = [];
+  // let twitterTrends = [];
+  // twitterTrends.push(trends.getTrends())
+  // twitterTrends.then(res => console.log(res))
+  const data = await db.collection("news").get().then(querySnapshot => {
+    let articles = [];
+    querySnapshot.forEach(function(doc) {
+      articles.push(doc.data())
+    });
+    return articles
+}).then(data => {
+  res.render('overview', {data: data})
+});
+}
 
-    function gotData(err, data, response) {
-        var tweets = JSON.stringify(data);
-        console.log(tweets);
-    }
- 
-// stream.on('tweet', function (tweet) {
-//   console.log(tweet)
-// })
-
-// const players = {};
-// const balls = {};
-// io.on("connection", sockets => init.initSockets(io, players, sockets));
-
-// setInterval(function() {
-//   io.sockets.emit("state", players);
-//   io.sockets.emit("collision", players);
-//   // io.sockets.emit("ballFired", balls);
-// }, 1000 / 60);
-
-http.listen(process.env.PORT || 3000);
+async function renderDetail(req, res, next){
+  const id = req.params.id
+  res.render('detail');
+}
