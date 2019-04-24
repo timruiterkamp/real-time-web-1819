@@ -1,20 +1,9 @@
-console.log("test");
+var socket = io();
 
-// socket.on("message", msg => {
-//   const messages = document.querySelector("#messages");
-//   messages.innerHTML += `<li>${msg}</li>`;
-// });
-
-// (() => {
-//   const form = document.querySelector("#form");
-//   const message = document.querySelector("#message");
-//   if (form) {
-//     form.addEventListener("submit", e => {
-//       e.preventDefault();
-//       console.log("komt er in");
-//       socket.emit("message", message.value);
-//       message.value = "";
-//       return false;
-//     });
-//   }
-// })();
+socket.on("searchTweets", msg => {
+  console.log(msg);
+  const messages = document.querySelector("#tweets");
+  messages.innerHTML += `<li>${msg.text} from ${
+    msg.user ? msg.user.location : ""
+  }</li>`;
+});

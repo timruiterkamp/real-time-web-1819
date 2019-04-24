@@ -1,9 +1,13 @@
 <section>
+  <h1>The current news around the world</h1>
   {{#each data}}
+  <article>
+    <p>{{site}}</p>
     <a href="{{permalink}}">
-    <h2>{{site}}</h2></a>
-    <p>{{title}}</p>
+      <h3>{{title}}</h3>
+    </a>
     <p>{{subtitle}}</p>
+  </article>
   {{/each}}
-  
+
 </section>

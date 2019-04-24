@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 body {
-  font: 13px Helvetica, Arial;
+  font: 16px Helvetica, Arial;
 }
 
 .login-screen {
@@ -61,4 +61,21 @@ form input[type="submit"] {
 h1 {
   text-align: center;
   padding-top: 1em;
+  font-size: 2.5rem;
+}
+
+article {
+  margin: 1rem auto;
+  border: 1px solid #3a3a3a;
+  padding: 1em;
+  max-width: 40rem;
+
+  a {
+    color: #3a3a3a;
+    text-decoration: none;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
 }
