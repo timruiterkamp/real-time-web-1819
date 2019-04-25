@@ -35,6 +35,10 @@
     "semicolon": false,
     "prettier": true
   },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
