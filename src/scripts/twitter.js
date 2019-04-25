@@ -1,5 +1,7 @@
 const Twit = require("twit");
 require("dotenv").config();
+const Sentiment = require("sentiment");
+const sentiment = new Sentiment();
 
 const T = new Twit({
   consumer_key: process.env.consumer_key,
@@ -24,19 +26,99 @@ const getStream = (keyword, socket) => {
     language: "en"
   });
 
-  stream.on("tweet", function(tweet) {
-    socket.emit("searchTweets", tweet);
-    console.log(tweet);
+  stream.on("tweet", function(tweets) {
+    let result = [];
+
+    var analysation = sentiment.analyze(tweets.text);
+
+    if (analysation.score > 0) {
+      result.push({
+        text: tweets.text,
+        country:
+          tweets.user && tweets.user.location !== false
+            ? tweets.user.location
+            : "unknown",
+        name:
+          tweets.user && tweets.user.name !== null
+            ? tweets.user.name
+            : "anonymous",
+        image:
+          tweets.user && tweets.user.profile_image_url_https !== null
+            ? tweets.user.profile_image_url_https
+            : "",
+        sentiment: "negative"
+      });
+    } else {
+      result.push({
+        text: tweets.text,
+        country:
+          tweets.user && tweets.user.location !== false
+            ? tweets.user.location
+            : "unknown",
+        name:
+          tweets.user && tweets.user.name !== null
+            ? tweets.user.name
+            : "anonymous",
+        image:
+          tweets.user && tweets.user.profile_image_url_https !== null
+            ? tweets.user.profile_image_url_https
+            : "",
+        sentiment: "positive"
+      });
+    }
+
+    socket.emit("searchTweets", result);
   });
 };
 
-const getTweets = keyword => {
+const getTweets = (keyword, socket) => {
   T.get("search/tweets", { q: keyword, count: 100 }, function(
     err,
     data,
     response
   ) {
-    console.log(data);
+    let tweetResults = [];
+
+    data.statuses.map(tweets => {
+      var analysation = sentiment.analyze(tweets.text);
+
+      if (analysation.score > 0) {
+        tweetResults.push({
+          text: tweets.text,
+          country:
+            tweets.user && tweets.user.location !== false
+              ? tweets.user.location
+              : "unknown",
+          name:
+            tweets.user && tweets.user.name !== null
+              ? tweets.user.name
+              : "anonymous",
+          image:
+            tweets.user && tweets.user.profile_image_url_https !== null
+              ? tweets.user.profile_image_url_https
+              : "",
+          sentiment: "negative"
+        });
+      } else {
+        tweetResults.push({
+          text: tweets.text,
+          country:
+            tweets.user && tweets.user.location !== false
+              ? tweets.user.location
+              : "unknown",
+          name:
+            tweets.user && tweets.user.name !== null
+              ? tweets.user.name
+              : "anonymous",
+          image:
+            tweets.user && tweets.user.profile_image_url_https !== null
+              ? tweets.user.profile_image_url_https
+              : "",
+          sentiment: "positive"
+        });
+      }
+    });
+    socket.emit("oldTweets", tweetResults);
   });
 };
 

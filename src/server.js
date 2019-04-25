@@ -15,11 +15,13 @@ const rule = new schedule.RecurrenceRule();
 const slugify = require("slugify");
 const human = require("humanparser");
 const keyword_extractor = require("keyword-extractor");
-rule.minute = 37;
+const natural = require("natural");
+const tokenizer = new natural.SentenceTokenizer();
+// rule.minute = 19;
 
-schedule.scheduleJob(rule, function() {
-  crawler.gatherNewsTitles();
-});
+// schedule.scheduleJob(rule, function() {
+//   crawler.gatherNewsTitles();
+// });
 
 app
   .set("views", "src/views/")
@@ -44,22 +46,27 @@ app
   .get("/", renderOverview);
 
 async function renderOverview(req, res, next) {
-  // let titles = [];
-  // let twitterTrends = [];
-  // twitterTrends.push(trends.getTrends())
-  // twitterTrends.then(res => console.log(res))
   const data = await db
     .collection("news")
+    .orderBy("added", "asc")
+    .limit(40)
     .get()
     .then(querySnapshot => {
       let articles = [];
       querySnapshot.forEach(function(doc) {
-        console.log(doc);
         articles.push(doc.data());
       });
       return articles;
     })
     .then(data => {
+      fs.writeFile(
+        "src/newsItems.json",
+        JSON.stringify(data),
+        "utf8",
+        (err, data, res) =>
+          err ? console.log(err) : console.log("document succesfully written")
+      );
+
       res.render("overview", { data: data });
     })
     .catch(err => console.error(err));
@@ -67,36 +74,98 @@ async function renderOverview(req, res, next) {
 
 async function renderDetail(req, res, next) {
   const id = req.params.id;
-  const data = await db
-    .get()
-    .then(querySnapshot => {
-      let articles = [];
-      querySnapshot.forEach(function(doc) {
-        articles.push(doc.data());
-      });
-      return articles;
-    })
-    .then(async data => {
-      const article = await data.filter(
-        article => slugify(article.title) === id
-      );
-      res.render("detail", { data: article[0] });
+  fs.readFile("src/newsItems.json", "utf8", (err, data) => {
+    if (err) console.error(err);
+    const result = JSON.parse(data);
+    const filtered = result.filter(article => slugify(article.title) === id);
+    res.render("detail", { data: filtered[0] });
+    const article = filtered[0];
+    // console.log(article);
 
-      const parsedName = human.parseName(article[0].title);
-      const extraction_result = keyword_extractor.extract(article[0].title, {
-        language: "english",
-        remove_digits: true,
-        return_changed_case: true,
-        remove_duplicates: false
-      });
+    if (article) {
+      const parsedName = human.parseName(article.title);
+      const extraction_result = keyword_extractor
+        .extract(article.title, {
+          language: "english",
+          remove_digits: true,
+          return_changed_case: true,
+          remove_duplicates: false
+        })
+        .join(" ", " ")
+        .toLowerCase()
+        .split(" ")
+        .map(s => s.charAt(0).toUpperCase() + s.substring(1))
+        .join(" ")
+        .replace(/\s/g, "");
 
-      const name = parsedName.fullName.replace(" ", "");
+      var source = parsedName.firstName + parsedName.lastName;
+      var target = article.title;
+
+      const foundSubject = natural.LevenshteinDistance(source, target, {
+        search: true
+      });
+      console.log("substring:", foundSubject.substring);
+
+      console.log("res:", extraction_result);
+      const name = foundSubject.substring.replace(/\s/g, "");
+      console.log("name:", name);
       io.on("connection", socket => {
-        twitter.getStream(`#${name}`, socket);
-        twitter.getTweets(`#${name}`, socket);
+        twitter.getStream(
+          `#${extraction_result.length > 10 ? name : extraction_result}`,
+          socket
+        );
+        twitter.getTweets(
+          `#${extraction_result.length > 10 ? name : extraction_result}`,
+          socket
+        );
       });
-    })
-    .catch(err => console.error);
+    }
+  });
+  // const article = await data.filter(article => slugify(article.title) === id);
 }
+
+io.on("connection", socket => {
+  socket.on("addHotItem", value => {
+    db.collection("news")
+      .where("title", "==", value)
+      .get()
+      .then(querySnapshot => {
+        let id = "";
+        querySnapshot.forEach(function(doc) {
+          db.collection("news")
+            .doc(doc.id)
+            .update({ likes: 1 });
+
+          db.collection("hot")
+            .doc()
+            .set({
+              site: doc.data().site ? doc.data().site : "",
+              title: doc.data().title ? doc.data().title : "",
+              subtitle: doc.data().subtitle ? doc.data().subtitle : "",
+              permalink: doc.data().title ? slugify(doc.data().title) : "",
+              added: new Date(),
+              likes: 1
+            })
+            .then(function() {
+              console.log("Document successfully written!");
+            })
+            .catch(function(error) {
+              console.error("Error writing document: ", error);
+            });
+        });
+        return id;
+      });
+  });
+
+  db.collection("hot")
+    .where("likes", ">", 0)
+    .onSnapshot(function(querySnapshot) {
+      var data = [];
+      querySnapshot.forEach(function(doc) {
+        data.push(doc.data());
+      });
+      socket.emit("newHotItems", data);
+    });
+});
 
 http.listen(process.env.PORT || 3000);

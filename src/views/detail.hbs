@@ -1,10 +1,40 @@
-<section>
-  <h1>detail</h1>
-  {{data.title}}
-  {{data.subtitle}}
-  <h3>Tweets</h3>
-  <section id="tweets">
+<section class="container">
+  <div class="row justify-content-center">
+    <h1 class="col-sm-12 center">{{data.title}}</h1>
+    <div class="col-sm-12 text-center mb-4 mt-4">
+      {{data.subtitle}}
+    </div>
+    <a class="col-sm-3 text-center btn btn-outline-primary mb-4" href="/">go back</a>
 
-  </section>
-  <a href="/">go back</a>
+
+    <div class="chart col-sm-12">
+      <h3 class="text-center">What do people think about this</h3>
+      <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
+
+    <div class="card col-sm-12 mb-4 mt-4">
+      <div class="card-header">
+        <h3>What people are saying currently:</h3>
+      </div>
+      <div class="card-body">
+        <section class="tweets" id="tweets"></section>
+      </div>
+    </div>
+
+
+
+    <div class="card col-sm-12 mb-4 mt-4">
+      <div class="card-header">
+        <h3>What people have said in the past:</h3>
+      </div>
+      <div class="card-body">
+        <div class="col-sm-12">
+          <section class="col-sm-12 tweets" id="oldTweets"></section>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
 </section>

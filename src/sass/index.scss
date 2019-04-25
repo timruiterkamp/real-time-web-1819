@@ -64,18 +64,82 @@ h1 {
   font-size: 2.5rem;
 }
 
-article {
-  margin: 1rem auto;
-  border: 1px solid #3a3a3a;
-  padding: 1em;
-  max-width: 40rem;
+// article {
+//   margin: 1rem auto;
+//   border: 1px solid #3a3a3a;
+//   padding: 1em;
+//   max-width: 40rem;
 
-  a {
-    color: #3a3a3a;
-    text-decoration: none;
+//   a {
+//     color: #3a3a3a;
+//     text-decoration: none;
+//   }
+
+//   h2 {
+//     font-size: 1.5rem;
+//   }
+// }
+
+// #oldTweets {
+//   article {
+//     margin: 1rem auto;
+//     border: 1px solid #3a3a3a;
+//     padding: 1em;
+//     max-width: 40rem;
+
+//     a {
+//       color: #3a3a3a;
+//       text-decoration: none;
+//     }
+
+//     h2 {
+//       font-size: 1.5rem;
+//     }
+//   }
+// }
+
+.tweets {
+  article {
+    border: 1px solid #efefef;
+    padding: 1em;
+    border-radius: 5px;
   }
+  .heading {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 1rem 0;
 
-  h2 {
-    font-size: 1.5rem;
+    img {
+      border-radius: 50%;
+      width: 65px;
+      height: auto;
+      margin-right: 15px;
+    }
+  }
+}
+
+canvas {
+  max-width: 600px;
+  max-height: 600px;
+}
+
+.hotSection {
+  display: none;
+}
+
+.like-button {
+  height: 40px;
+
+  &:hover {
+    svg {
+      fill: white;
+    }
+  }
+  svg {
+    padding: 0;
+    width: 25px;
+    height: auto;
+    fill: green;
   }
 }

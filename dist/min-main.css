@@ -59,13 +59,35 @@ h1 {
   padding-top: 1em;
   font-size: 2.5rem; }
 
-article {
-  margin: 1rem auto;
-  border: 1px solid #3a3a3a;
+.tweets article {
+  border: 1px solid #efefef;
   padding: 1em;
-  max-width: 40rem; }
-  article a {
-    color: #3a3a3a;
-    text-decoration: none; }
-  article h2 {
-    font-size: 1.5rem; }
+  border-radius: 5px; }
+
+.tweets .heading {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 1rem 0; }
+  .tweets .heading img {
+    border-radius: 50%;
+    width: 65px;
+    height: auto;
+    margin-right: 15px; }
+
+canvas {
+  max-width: 600px;
+  max-height: 600px; }
+
+.hotSection {
+  display: none; }
+
+.like-button {
+  height: 40px; }
+  .like-button:hover svg {
+    fill: white; }
+  .like-button svg {
+    padding: 0;
+    width: 25px;
+    height: auto;
+    fill: green; }
