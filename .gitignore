@@ -3,4 +3,3 @@ DS_Store
 .env
 .vscode
 /week1/node_modules
-/src/firebase-login.json
