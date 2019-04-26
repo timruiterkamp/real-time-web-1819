@@ -302,6 +302,53 @@ The current data I use from twitter is:
 
 ![data cycle v2](gh-images/data-cycle2.jpg)
 
+## Processing of titles to somewhat meaningful hashtags
+
+I tried to use natural language processing to determine what for hashtag should be called.
+
+I used a combination of human parsing, keyword extraction and Levenshtein Distance to gather persons, keywords and related sentences. The code beneath is a representation of how I look up hashtags.
+
+```Javascript
+
+  //parse the name out of the title, not very acurate.
+  const parsedName = human.parseName(article.title)
+
+  // extract all keywords and create a hashtag out of it
+  const extraction_result = keyword_extractor
+    .extract(article.title, {
+      language: 'english',
+      remove_digits: true,
+      return_changed_case: true,
+      remove_duplicates: false
+    })
+    .join(' ', ' ')
+    .toLowerCase()
+    .split(' ')
+    .map(s => s.charAt(0).toUpperCase() + s.substring(1))
+    .join(' ')
+    .replace(/\s/g, '')
+
+  //set source to first and last name, as these object values give the best results
+  const source = parsedName.firstName + parsedName.lastName
+  // target the title
+  const target = article.title
+
+  // search for the most related words througout a sentence based on the human parser
+  const foundSubject = natural.LevenshteinDistance(source, target, {
+    search: true
+  })
+
+  // Remove spaces
+  const name = foundSubject.substring.replace(/\s/g, '')
+
+  io.on('connection', socket => {
+    twitter.getStream(
+      // If the extraction hashtag is to long use the name
+      `#${extraction_result.length > 10 ? name : extraction_result}`,
+      socket
+    )
+```
+
 ## Feedback
 
 I would like feedback on my data structure in combination with my concept. I think there will be an more effective way.

@@ -103,11 +103,7 @@ async function renderDetail(req, res, next) {
       const foundSubject = natural.LevenshteinDistance(source, target, {
         search: true
       })
-      console.log('substring:', foundSubject.substring)
-
-      console.log('res:', extraction_result)
       const name = foundSubject.substring.replace(/\s/g, '')
-      console.log('name:', name)
       io.on('connection', socket => {
         twitter.getStream(
           `#${extraction_result.length > 10 ? name : extraction_result}`,
