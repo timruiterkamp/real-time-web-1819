@@ -66,7 +66,6 @@ const getStream = (keyword, socket) => {
         sentiment: 'positive'
       })
     }
-
     socket.emit('searchTweets', result)
   })
 }
@@ -118,6 +117,7 @@ const getTweets = (keyword, socket) => {
         })
       }
     })
+
     socket.emit('oldTweets', tweetResults)
   })
 }

@@ -10,13 +10,16 @@ In the first week, I created the basic message app quite fast. So I challenged m
 there will be an alert or console log with the message "you won". So what it essentialy does is detect if two players are in the same place and returns a collision statement. Howover, this is not very good practice as you cannot know who collide with who and there is currently no way to detect the angle of impact for some sort of bounce effect. To tackle this I need to work with 2d vectors and libraries like victor.js and get deeper into the physics of game development.
 
 ## Week 2
+
 In this week it was all about creating a new concept and to continue building something awesome.
 
 ### Concept
+
 The concept I came up with, after the presentation of Laurens on tuesday, is to locate the opinion of people on breaking news items around the world. To achieve this, I gather multiple news sources over the world and connect them to hashtags on twitter of rising topics.  
 I came up with this idea based on the tragedy that happened to the Notre Dame in Paris. In europe almost everyone was very sad about what happened but from america there where tweets about justice for the slavery 400 years ago. Besides that the notre-dame was build way before the slavery era, it is interesting to see how people from different areas of the world are opinionated about breaking news.
 
 ### Api
+
 The api that I use is the twitter api, this is a really big real-time api which gives a rich amount of content back as seen below.
 
 <details>
@@ -178,86 +181,127 @@ The api that I use is the twitter api, this is a really big real-time api which 
 
   </details>
 
-  #### The limits
-  The limits are per 15 minutes for the twitter api.  
-  
-  |             Request             |         Limit per 15 min          |
-  | :-----------------------------: | :-------------------------------: |
-  |           GET Trends            |                 75                |
-  |           GET search/tweets     |                 180               |
+#### The limits
 
-  
-  ## Views
-  I have multiple views where there can be interaction with data gather from the scraper and from the twitter API.
+The limits are per 15 minutes for the twitter api.
 
-  The screens will be as following:
-  ![Screens](gh-images/screens.JPG)
+|      Request      | Limit per 15 min |
+| :---------------: | :--------------: |
+|    GET Trends     |        75        |
+| GET search/tweets |       180        |
 
-  On the overview page there will be a list with the most interesting news per country, these can be clicked on to move to the next screen.  
-  On the detail page you can see how many tweets there are over the world about this specific topic and can be clicked on to view a more in-depth about what tweets are being send.
+## Views
 
-  ## Data life cycle
-  The data that I will use from twitter is their trends:
-  ```JSON
-  [
-    {
-      "name":"#DuyguAsena",
-      "url":"http://twitter.com/search?q=%23DuyguAsena",
-      "promoted_content":null,
-      "query":"%23DuyguAsena",
-      "tweet_volume":null,
-      
-    }
-  ]
-  ```
+I have multiple views where there can be interaction with data gather from the scraper and from the twitter API.
 
-  And their tweets on certain topics, which will be a filtered stream of tweets.
+The screens will be as following:
+![Screens](gh-images/screens.JPG)
 
-  ```JSON
-  [
-    {
-     "entities": { "hashtags": [], "urls": [], "user_mentions": [], "symbols": [] },
-     "geo": null,
-     "coordinates": null,
-     "place": null,
-     "user": {
-        "screen_name": "Ashraf_021",
-        "created_at": "Fri Nov 23 23:33:13 +0000 2018"
-      },
-      "quoted_status": {
-        "text": "watermelon and mango are the best fruits do not try to argue with me i know im winning https://t.co/ujSDfUtmRC'"
-      }
-    }
-  ]
-  ```
+On the overview page there will be a list with the most interesting news per country, these can be clicked on to move to the next screen.  
+ On the detail page you can see how many tweets there are over the world about this specific topic and can be clicked on to view a more in-depth about what tweets are being send.
 
-  * More will probably follow when I get deeper into the project.
+## Data life cycle
 
+The data that I will use from twitter is their trends:
 
-  From the scraper I get an array of objects that are scraped from different news sites. An array can look like this:
-  ```JSON
-  [
-    {
-        "site": "Guardian",
-        "title": "Trump-Russia investigation",
-        "subtitle": "Mueller report unable to clear Trump of obstruction of justice"
-    }
-  ]
+```JSON
+[
+  {
+    "name":"#DuyguAsena",
+    "url":"http://twitter.com/search?q=%23DuyguAsena",
+    "promoted_content":null,
+    "query":"%23DuyguAsena",
+    "tweet_volume":null,
+
+  }
+]
 ```
 
-  I Currently gather news from these sites:
-  - The Guardian
-  - Der Spiegel
-  - The times
-  - The South African, 
-  - Irish times
-  - Corriere (italian)
-  - NU.nl
+And their tweets on certain topics, which will be a filtered stream of tweets.
 
+```JSON
+[
+  {
+   "entities": { "hashtags": [], "urls": [], "user_mentions": [], "symbols": [] },
+   "geo": null,
+   "coordinates": null,
+   "place": null,
+   "user": {
+      "screen_name": "Ashraf_021",
+      "created_at": "Fri Nov 23 23:33:13 +0000 2018"
+    },
+    "quoted_status": {
+      "text": "watermelon and mango are the best fruits do not try to argue with me i know im winning https://t.co/ujSDfUtmRC'"
+    }
+  }
+]
+```
 
-  Visualisation of my data cycle:
+- More will probably follow when I get deeper into the project.
+
+From the scraper I get an array of objects that are scraped from different news sites. An array can look like this:
+
+```JSON
+[
+  {
+      "site": "Guardian",
+      "title": "Trump-Russia investigation",
+      "subtitle": "Mueller report unable to clear Trump of obstruction of justice"
+  }
+]
+```
+
+I Currently gather news from these sites:
+
+- The Guardian
+- Der Spiegel
+- The times
+- The South African,
+- Irish times
+- Corriere (italian)
+- NU.nl
+
+Visualisation of my data cycle:
 ![data cycle](gh-images/data-cycle.jpg)
 
-  ## Feedback
+## Week 3
 
-  I would like feedback on my data structure in combination with my concept. I think there will be an more effective way.
+This week was all about creating the final product. The data structure stayed the same but I created more database points and used natural language processing to create hashtags based on titles.
+
+## updated data structure
+
+The current data I use from the crawler and store in Firestore:
+
+```JSON
+[
+  {
+    "added": "25 april 2019 om 23:19:28 UTC+2 (tijdstempel)",
+    "likes": 1,
+    "permalink":"Northern-Ireland",
+    "site":"Guardian",
+    "subtitle":"Up to 200 ex-soldiers and police facing Troubles investigations",
+    "title":"Northern Ireland"
+  }
+]
+```
+
+The current data I use from twitter is:
+
+```JSON
+[ {
+ "text": "yõö poor Mozambique😔😔again????? #CYCLONEKENNETH",
+    "country": "westonaria",
+    "name": "Luwi Ngo🅱eni Jr",
+    "image":
+     "https://pbs.twimg.com/profile_images/1109371305911042048/Iux046Rc_normal.jpg",
+
+}]
+```
+
+## Updated data cycle
+
+![data cycle v2](gh-images/data-cycle2.jpg)
+
+## Feedback
+
+I would like feedback on my data structure in combination with my concept. I think there will be an more effective way.
